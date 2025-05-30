@@ -121,7 +121,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
               </tr>
             </thead>
-            <tbody id="tabela-peritos" class="bg-white divide-y divide-gray-200">
+            <tbody id="tabela-profileP" class="bg-white divide-y divide-gray-200">
               <!-- conteúdo dinâmico -->
             </tbody>
           </table>
@@ -131,33 +131,36 @@
 
     <!-- Modal Criar/Editar Perito -->
     <div id="modal-criar" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm animate-fadeIn relative">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] h-auto overflow-y-auto animate-fadeIn relative">
         <button onclick="fecharModalCriarPerito()" class="absolute top-2 right-3 text-gray-500 text-2xl">&times;</button>
-        <h2 class="text-xl font-semibold mb-4" id="modal-perito-titulo">Adicionar Perito</h2>
+        <h2 class="text-xl font-semibold mb-2" id="modal-perito-titulo">Adicionar Perito</h2>
         <form onsubmit="guardarPerito(event)">
-          <label class="block mb-2">Nome:</label>
-          <input type="text" id="perito-nome" required class="w-full border px-3 py-2 rounded mb-4" />
+          <label class="block mb-1">Nome:</label>
+          <input type="text" id="profileP-name" required class="w-full border px-2 py-1 rounded mb-2" />
 
-          <label class="block mb-2">Email:</label>
-          <input type="email" id="perito-email" required class="w-full border px-3 py-2 rounded mb-4" />
+          <label class="block mb-1">Email:</label>
+          <input type="email" id="profileP-email" required class="w-full border px-2 py-1 rounded mb-2" />
 
-          <label class="block mb-2">Data de Nascimento:</label>
-          <input type="date" id="perito-nascimento" required class="w-full border px-3 py-2 rounded mb-4" />
+          <label class="block mb-1">Data de Nascimento:</label>
+          <input type="date" id="profileP-dob" required class="w-full border px-2 py-1 rounded mb-2" />
 
-          <label class="block mb-2">Área:</label>
-          <select id="perito-area" required class="w-full border px-3 py-2 rounded mb-4">
+          <label class="block mb-1">Área:</label>
+          <select id="profileP-speciality" required class="w-full border px-2 py-1 rounded mb-2">
             <option value="">Selecione</option>
             <option value="Paragens">Paragens</option>
             <option value="Autocarros">Autocarros</option>
           </select>
 
-          <label class="block mb-2">Morada:</label>
-          <input type="text" id="perito-morada" required class="w-full border px-3 py-2 rounded mb-4" />
+          <label class="block mb-1">Localização:</label>
+          <input type="text" id="profileP-location" required class="w-full border px-2 py-1 rounded mb-2" />
 
-          <label class="block mb-2">Nº Telemóvel:</label>
-          <input type="tel" id="perito-telemovel" required pattern="[0-9]{9}" maxlength="9" class="w-full border px-3 py-2 rounded mb-4" />
+          <label class="block mb-1">Morada:</label>
+          <input type="text" id="profileP-address" required class="w-full border px-2 py-1 rounded mb-2" />
 
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+          <label class="block mb-1">Nº Telemóvel:</label>
+          <input type="tel" id="profileP-phone" required pattern="[0-9]{9}" maxlength="9" class="w-full border px-2 py-1 rounded mb-2" />
+
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Guardar</button>
         </form>
       </div>
     </div>
@@ -169,26 +172,28 @@
         peritoEditando = null;
         document.getElementById("modal-criar").classList.add("show");
         document.getElementById("modal-perito-titulo").innerText = "Adicionar Perito";
-        document.getElementById("perito-nome").value = "";
-        document.getElementById("perito-email").value = "";
-        document.getElementById("perito-nascimento").value = "";
-        document.getElementById("perito-area").value = "";
-        document.getElementById("perito-morada").value = "";
-        document.getElementById("perito-telemovel").value = "";
+        document.getElementById("profileP-name").value = "";
+        document.getElementById("profileP-email").value = "";
+        document.getElementById("profileP-dob").value = "";
+        document.getElementById("profileP-speciality").value = "";
+        document.getElementById("profileP-location").value = "";
+        document.getElementById("profileP-address").value = "";
+        document.getElementById("profileP-phone").value = "";
       }
 
-      function abrirModalEditarPerito(nome) {
-        let peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
-        const perito = peritos.find(p => p.nome === nome);
+      function abrirModalEditarPerito(name) {
+        let profileP = JSON.parse(localStorage.getItem("profileP") || "[]");
+        const perito = profileP.find(p => p.name === name);
         if (!perito) return;
 
-        peritoEditando = nome;
-        document.getElementById("perito-nome").value = perito.nome;
-        document.getElementById("perito-email").value = perito.email;
-        document.getElementById("perito-nascimento").value = perito.nascimento;
-        document.getElementById("perito-area").value = perito.area;
-        document.getElementById("perito-morada").value = perito.morada;
-        document.getElementById("perito-telemovel").value = perito.telemovel;
+        peritoEditando = name;
+        document.getElementById("profileP-name").value = perito.name;
+        document.getElementById("profileP-email").value = perito.email;
+        document.getElementById("profileP-dob").value = perito.dob;
+        document.getElementById("profileP-speciality").value = perito.speciality;
+        document.getElementById("profileP-location").value = perito.location;
+        document.getElementById("profileP-address").value = perito.address;
+        document.getElementById("profileP-phone").value = perito.phone;
 
         document.getElementById("modal-criar").classList.add("show");
         document.getElementById("modal-perito-titulo").innerText = "Editar Perito";
@@ -202,71 +207,72 @@
 
       function guardarPerito(event) {
         event.preventDefault();
-        const nome = document.getElementById("perito-nome").value.trim();
-        const email = document.getElementById("perito-email").value.trim();
-        const nascimento = document.getElementById("perito-nascimento").value;
-        const area = document.getElementById("perito-area").value;
-        const morada = document.getElementById("perito-morada").value.trim();
-        const telemovel = document.getElementById("perito-telemovel").value.trim();
+        const name = document.getElementById("profileP-name").value.trim();
+        const email = document.getElementById("profileP-email").value.trim();
+        const dob = document.getElementById("profileP-dob").value;
+        const speciality = document.getElementById("profileP-speciality").value;
+        const location = document.getElementById("profileP-location").value.trim();
+        const address = document.getElementById("profileP-address").value.trim();
+        const phone = document.getElementById("profileP-phone").value.trim();
 
-        if (!nome || !email || !nascimento || !area || !morada || !telemovel) {
+        if (!name || !email || !dob || !speciality || !location || !address || !phone) {
           alert("Preencha todos os campos!");
           return;
         }
 
-        let peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
+        let profileP = JSON.parse(localStorage.getItem("profileP") || "[]");
 
         if (peritoEditando) {
           // Editar perito existente
           if (
-            peritos.some(
-              p => (p.nome.toLowerCase() === nome.toLowerCase() || p.email.toLowerCase() === email.toLowerCase()) && p.nome !== peritoEditando
+            profileP.some(
+              p => (p.name.toLowerCase() === name.toLowerCase() || p.email.toLowerCase() === email.toLowerCase()) && p.name !== peritoEditando
             )
           ) {
             alert("⚠️ Já existe um perito com esse nome ou email.");
             return;
           }
-          const idx = peritos.findIndex(p => p.nome === peritoEditando);
+          const idx = profileP.findIndex(p => p.name === peritoEditando);
           if (idx !== -1) {
-            peritos[idx] = { nome, email, nascimento, area, morada, telemovel };
+            profileP[idx] = { name, email, dob, speciality, location, address, phone};
           }
           peritoEditando = null;
         } else {
           // Adicionar novo perito
-          if (peritos.some(p => p.nome.toLowerCase() === nome.toLowerCase() || p.email.toLowerCase() === email.toLowerCase())) {
+          if (profileP.some(p => p.name.toLowerCase() === name.toLowerCase() || p.email.toLowerCase() === email.toLowerCase())) {
             alert("⚠️ Este perito já existe.");
             return;
           }
-          peritos.push({ nome, email, nascimento, area, morada, telemovel });
+          profileP.push({ name, email, dob, speciality, location, address, phone});
         }
 
-        localStorage.setItem("peritos", JSON.stringify(peritos));
+        localStorage.setItem("profileP", JSON.stringify(profileP));
         fecharModalCriarPerito();
         renderTabelaPeritos();
       }
 
-      function removerPerito(nome) {
-        if (!confirm(`Deseja remover o perito "${nome}"?`)) return;
-        let peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
-        peritos = peritos.filter(p => p.nome !== nome);
-        localStorage.setItem("peritos", JSON.stringify(peritos));
+      function removerPerito(name) {
+        if (!confirm(`Deseja remover o perito "${name}"?`)) return;
+        let profileP = JSON.parse(localStorage.getItem("profileP") || "[]");
+        profileP = profileP.filter(p => p.name !== name);
+        localStorage.setItem("profileP", JSON.stringify(profileP));
         renderTabelaPeritos();
       }
 
       function renderTabelaPeritos() {
-        let peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
-        const tbody = document.getElementById("tabela-peritos");
+        let profileP = JSON.parse(localStorage.getItem("profileP") || "[]");
+        const tbody = document.getElementById("tabela-profileP");
         tbody.innerHTML = "";
-        peritos.forEach(p => {
+        profileP.forEach(p => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td class="px-4 py-2">${p.nome}</td>
-            <td class="px-4 py-2">${p.area}</td>
+            <td class="px-4 py-2">${p.name}</td>
+            <td class="px-4 py-2">${p.speciality}</td>
             <td class="px-4 py-2 flex gap-2">
-              <button onclick="abrirModalEditarPerito('${p.nome.replace(/'/g, "\\'")}')" class="text-yellow-600 hover:bg-yellow-100 rounded p-2" title="Editar">
+              <button onclick="abrirModalEditarPerito('${p.name.replace(/'/g, "\\'")}')" class="text-yellow-600 hover:bg-yellow-100 rounded p-2" title="Editar">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button onclick="removerPerito('${p.nome.replace(/'/g, "\\'")}')" class="text-red-600 hover:bg-red-100 rounded p-2" title="Remover">
+              <button onclick="removerPerito('${p.name.replace(/'/g, "\\'")}')" class="text-red-600 hover:bg-red-100 rounded p-2" title="Remover">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
@@ -281,7 +287,7 @@
 
       // Atualiza a tabela se os peritos mudarem noutra aba
       window.addEventListener('storage', function(e) {
-        if (e.key === 'peritos') {
+        if (e.key === 'profileP') {
           renderTabelaPeritos();
         }
       });
