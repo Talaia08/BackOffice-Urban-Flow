@@ -108,7 +108,7 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data/Hora</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"></th>
               </tr>
@@ -171,10 +171,8 @@
                   <i class="bi bi-geo-alt-fill"></i>
                 </button>
               </div>
-              <label class="block mb-2 text-sm font-medium">Data:</label>
-              <input type="date" id="novo-data" required class="w-full border p-2 mb-4 rounded" />
-              <label class="block mb-2 text-sm font-medium">Hora:</label>
-              <input type="time" id="novo-hora" required class="w-full border p-2 mb-4 rounded" />
+              <label class="block mb-2 text-sm font-medium">Data/Hora:</label>
+              <input type="datetime-local" id="novo-dataHora" required class="w-full border p-2 mb-4 rounded" />
               <label class="block mb-2 text-sm font-medium" id="label-ficheiro">Ficheiro (imagem ou PDF):</label>
                   <input type="file" id="novo-ficheiro" accept="image/*,application/pdf" class="w-full border p-2 mb-4 rounded" />
                   <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Guardar</button>
@@ -198,7 +196,7 @@
             const tr = document.createElement("tr");
             tr.innerHTML = `
               <td class="border px-4 py-2">${o.descricao}</td>
-              <td class="border px-4 py-2">${o.data}</td>
+              <td class="border px-4 py-2">${o.dataHora}</td>
               <td class="border px-4 py-2 ${corStatus} capitalize">${o.status}</td>
               <td class="border px-4 py-2 text-center">
                 <button onclick="event.stopPropagation(); expandirDetalhes(${o.id}, this)" class="text-blue-700 hover:text-blue-900 text-xl" title="Ver detalhes">
@@ -224,7 +222,6 @@
                     </div>
                     <div>
                       <div class="mb-2"><strong>Tipo:</strong> ${o.tipo || "-"}</div>
-                      <div class="mb-2"><strong>Hora:</strong> ${o.hora || "-"}</div>
                         <div class="mb-4">
                           ${
                             o.ficheiro
@@ -287,14 +284,12 @@
             let atrasos = JSON.parse(localStorage.getItem("atrasos") || "[]");
             const linha = document.getElementById("novo-linha").value;
             const tempo = document.getElementById("novo-tempo-atraso").value;
-            const data = document.getElementById("novo-data").value;
-            const hora = document.getElementById("novo-hora").value;
+            const dataHora = document.getElementById("novo-dataHora").value;
 
             atrasos.push({
               linha,
               tempo,
-              data,
-              hora
+              dataHora,
             });
             localStorage.setItem("atrasos", JSON.stringify(atrasos));
             fecharFormularioCriar();
@@ -304,8 +299,7 @@
 
           const descricao = document.getElementById("novo-descricao").value;
           const localizacao = document.getElementById("novo-localizacao").value;
-          const data = document.getElementById("novo-data").value;
-          const hora = document.getElementById("novo-hora").value;
+          const dataHora = document.getElementById("novo-dataHora").value;
           const ficheiroInput = document.getElementById("novo-ficheiro");
           const ficheiro = ficheiroInput.files[0];
 
@@ -315,8 +309,7 @@
               tipo,
               descricao,
               localizacao,
-              data,
-              hora,
+              dataHora,
               status: "pendente",
               perito: "",
               ficheiro: base64file || ""
@@ -354,10 +347,9 @@
                   idOcorrencia: o.id,
                   descricao: o.descricao,
                   detalhes: o.detalhes,
-                  data: o.data,
+                  dataHora: o.dataHora,
                   tipo: o.tipo,
                   localizacao: o.localizacao,
-                  hora: o.hora,
                   status: "pendente",
                   peritos: [],
                   materiais: [],
@@ -524,10 +516,8 @@
                     <i class="bi bi-geo-alt-fill"></i>
                   </button>
                 </div>
-                <label class="block mb-2 text-sm font-medium">Data:</label>
-                <input type="date" id="edit-data" value="${o.data}" required class="w-full border p-2 mb-4 rounded" />
-                <label class="block mb-2 text-sm font-medium">Hora:</label>
-                <input type="time" id="edit-hora" value="${o.hora}" required class="w-full border p-2 mb-4 rounded" />
+                <label class="block mb-2 text-sm font-medium">Data/Hora:</label>
+                <input type="date" id="edit-dataHora" value="${o.dataHora}" required class="w-full border p-2 mb-4 rounded" />
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-2">Guardar</button>
               </form>
             </div>
@@ -537,8 +527,7 @@
             e.preventDefault();
             o.descricao = document.getElementById("edit-descricao").value;
             o.localizacao = document.getElementById("edit-localizacao").value;
-            o.data = document.getElementById("edit-data").value;
-            o.hora = document.getElementById("edit-hora").value;
+            o.dataHora = document.getElementById("edit-dataHora").value;
             localStorage.setItem("ocorrencias", JSON.stringify(ocorrencias));
             modal.remove();
             renderTabela();
