@@ -38,7 +38,7 @@
                 <i class="bi bi-exclamation-triangle"></i> Ocorrências
             </button>
             <button onclick="window.location.href='atrasos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-                <i class="bi bi-bar-chart"></i> Atrasos
+                <i class="bi bi-clock-history"></i> Atrasos
             </button>
             <button onclick="window.location.href='auditorias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
                 <i class="bi bi-newspaper"></i> Auditorias
@@ -52,19 +52,18 @@
             <button onclick="window.location.href='stats.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
                 <i class="bi bi-bar-chart"></i> Indicadores
             </button>
-            <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
-                <i class="bi bi-bar-chart"></i> Mensagens
-              </button>
-          </nav>
+                    <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+            <i class="bi bi-envelope"></i> Mensagens
+          </button>
+        </nav>
     </aside>
 
     <!-- Main Content -->
     <div id="main" class="flex-1 ml-64 transition-all duration-300">
         <!-- Topbar -->
-        <header id="topbar" class="flex justify-between items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
+        <header id="topbar" class="flex justify-start items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
             <button id="toggle-btn" class="text-black text-xl" onclick="toggleSidebar()">☰</button>
-            <h3 class="text-lg font-semibold">Admin Urban Flow</h3>
-            <div class="relative group">
+            <div class="relative group ml-auto">
                 <button class="text-black focus:outline-none" id="profile-btn">
                     <i class="bi bi-person-circle text-2xl"></i>
                 </button>
@@ -282,6 +281,19 @@
                 renderMateriais();
             }
         });
+
+        // Função para usar material no plano de auditoria (chama isto ao usar material)
+        function usarMaterialNoPlano(nomeMaterial, quantidadeUsada) {
+            let materiais = JSON.parse(localStorage.getItem("materiais") || "[]");
+            const idx = materiais.findIndex(m => m.titulo === nomeMaterial);
+            if (idx !== -1) {
+                materiais[idx].quantidade = Math.max(0, materiais[idx].quantidade - quantidadeUsada);
+                localStorage.setItem("materiais", JSON.stringify(materiais));
+                renderMateriais();
+            }
+        }
+        // Exemplo de uso:
+        // usarMaterialNoPlano("Cimento", 2);
     </script>
 </body>
 </html>

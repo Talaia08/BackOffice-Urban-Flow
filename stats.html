@@ -29,48 +29,47 @@
             Urban Flow
         </div>
         <nav class="flex flex-col gap-2 px-4">
-        <button onclick="window.location.href='index.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-house-door"></i> Início
-        </button>
-        <button onclick="window.location.href='ocorrencias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-exclamation-triangle"></i> Ocorrências
-        </button>
-        <button onclick="window.location.href='atrasos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-bar-chart"></i> Atrasos
-        </button>
-        <button onclick="window.location.href='auditorias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-newspaper"></i> Auditorias
-        </button>
-        <button onclick="window.location.href='peritos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-person-badge"></i> Peritos
-        </button>
-        <button onclick="window.location.href='materiais.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-box"></i> Materiais
-        </button>
-        <button onclick="window.location.href='stats.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-bar-chart"></i> Indicadores
-        </button>
-        <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
-            <i class="bi bi-bar-chart"></i> Mensagens
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-house-door"></i> Início
+            </button>
+            <button onclick="window.location.href='ocorrencias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-exclamation-triangle"></i> Ocorrências
+            </button>
+            <button onclick="window.location.href='atrasos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-clock-history"></i> Atrasos
+            </button>
+            <button onclick="window.location.href='auditorias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-newspaper"></i> Auditorias
+            </button>
+            <button onclick="window.location.href='peritos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-person-badge"></i> Peritos
+            </button>
+            <button onclick="window.location.href='materiais.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-box"></i> Materiais
+            </button>
+            <button onclick="window.location.href='stats.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+                <i class="bi bi-bar-chart"></i> Indicadores
+            </button>
+                    <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+            <i class="bi bi-envelope"></i> Mensagens
           </button>
-      </nav>
+        </nav>
     </aside>
 
     <!-- Main Content -->
     <div id="main" class="flex-1 ml-64 transition-all duration-300">
         <!-- Topbar -->
-        <header id="topbar" class="flex justify-between items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
-            <button id="toggle-btn" class="text-black text-xl" onclick="toggleSidebar()">☰</button>
-            <h3 class="text-lg font-semibold">Admin Urban Flow</h3>
-            <div class="relative group">
-                <button class="text-black focus:outline-none" id="profile-btn">
-                    <i class="bi bi-person-circle text-2xl"></i>
-                </button>
-                <div id="profile-menu" class="hidden group-hover:block absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
-                    <button onclick="window.location.href='perfil.html'" class="w-full text-left px-4 py-2 hover:bg-gray-100">Perfil</button>
-                </div>
-            </div>
-        </header>
+<header id="topbar" class="flex justify-start items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
+  <button id="toggle-btn" class="text-black text-xl" onclick="toggleSidebar()">☰</button>
+  <div class="relative group ml-auto">
+    <button class="text-black focus:outline-none" id="profile-btn">
+      <i class="bi bi-person-circle text-2xl"></i>
+    </button>
+    <div id="profile-menu" class="hidden group-hover:block absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
+      <button onclick="window.location.href='perfil.html'" class="w-full text-left px-4 py-2 hover:bg-gray-100">Perfil</button>
+    </div>
+  </div>
+</header>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const btn = document.getElementById('profile-btn');

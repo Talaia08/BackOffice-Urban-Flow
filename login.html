@@ -56,16 +56,27 @@
     </div>
 
     <script>
-        function handleCredentialResponse(response) {
-            const jwt = response.credential;
-            const user = parseJwt(jwt);
+function handleCredentialResponse(response) {
+    const jwt = response.credential;
+    const user = parseJwt(jwt);
 
-            // Salva o usuário na sessão (inclui foto)
-            sessionStorage.setItem("user", JSON.stringify(user));
+    // Salva o usuário na sessão (inclui foto)
+    sessionStorage.setItem("user", JSON.stringify(user));
 
-            // Redireciona para o dashboard
-            window.location.href = "index.html";
-        }
+    // Preenche o perfil no localStorage para o perfil.html
+    const perfil = {
+        nomeUtilizador: user.name || user.email,
+        nomeCompleto: user.name || "",
+        dataNascimento: "", // Google não fornece
+        email: user.email || "",
+        telefone: "", // Google não fornece
+        morada: ""   // Google não fornece
+    };
+    localStorage.setItem("perfil", JSON.stringify(perfil));
+
+    // Redireciona para o dashboard
+    window.location.href = "index.html";
+}
 
         function parseJwt(token) {
             let base64Url = token.split('.')[1];

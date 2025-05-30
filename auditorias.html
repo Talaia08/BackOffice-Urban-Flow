@@ -6,6 +6,10 @@
     <title>Auditorias - Urban Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- ...existing code... -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- ...existing code... -->
   </head>
   <body class="flex bg-gray-100 font-sans">
     <!-- Sidebar -->
@@ -15,29 +19,29 @@
         Urban Flow
       </div>
       <nav class="flex flex-col gap-2 px-4">
-        <button onclick="window.location.href='index.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-house-door"></i> Início
+        <button onclick="window.location.href='index.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-house-door"></i> Início
         </button>
-        <button onclick="window.location.href='ocorrencias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-exclamation-triangle"></i> Ocorrências
+        <button onclick="window.location.href='ocorrencias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-exclamation-triangle"></i> Ocorrências
         </button>
-        <button onclick="window.location.href='atrasos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-bar-chart"></i> Atrasos
+        <button onclick="window.location.href='atrasos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-clock-history"></i> Atrasos
         </button>
-        <button onclick="window.location.href='auditorias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-newspaper"></i> Auditorias
+        <button onclick="window.location.href='auditorias.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-newspaper"></i> Auditorias
         </button>
-        <button onclick="window.location.href='peritos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-person-badge"></i> Peritos
+        <button onclick="window.location.href='peritos.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-person-badge"></i> Peritos
         </button>
-        <button onclick="window.location.href='materiais.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-box"></i> Materiais
+        <button onclick="window.location.href='materiais.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-box"></i> Materiais
         </button>
-        <button onclick="window.location.href='stats.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500 ease-in-out">
-            <i class="bi bi-bar-chart"></i> Indicadores
+        <button onclick="window.location.href='stats.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+          <i class="bi bi-bar-chart"></i> Indicadores
         </button>
-        <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
-            <i class="bi bi-bar-chart"></i> Mensagens
+                <button onclick="window.location.href='mensagens.html'" class="flex items-center gap-2 p-2 hover:bg-blue-800 rounded transition-all duration-500">
+            <i class="bi bi-envelope"></i> Mensagens
           </button>
       </nav>
     </aside>
@@ -45,10 +49,9 @@
     <!-- Main Content -->
     <div id="main" class="flex-1 ml-64 transition-all duration-300">
       <!-- Topbar -->
-      <header id="topbar" class="flex justify-between items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
+      <header id="topbar" class="flex justify-start items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)] transition-all duration-300">
         <button id="toggle-btn" class="text-black text-xl" onclick="toggleSidebar()">☰</button>
-        <h3 class="text-lg font-semibold">Admin Urban Flow</h3>
-        <div class="relative group">
+        <div class="relative group ml-auto">
           <button class="text-black focus:outline-none" id="profile-btn">
             <i class="bi bi-person-circle text-2xl"></i>
           </button>
@@ -99,7 +102,7 @@
           <table class="min-w-full divide-y divide-gray-200 shadow rounded-lg overflow-hidden">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"></th>
@@ -110,39 +113,97 @@
             </tbody>
           </table>
         </div>
+
+<!-- Adiciona o mapa aqui -->
+<div id="map" style="height: 400px; margin-top: 32px; border-radius: 12px; overflow: hidden;"></div>
+<!-- ...existing code... -->
       </main>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        migrarOcorrenciasAprovadas();
-        renderizarTabelaAuditorias();
-      });
+// ...existing code...
+document.addEventListener("DOMContentLoaded", () => {
+  migrarOcorrenciasAprovadas();
+  renderizarTabelaAuditorias();
+  renderizarMapaOcorrencias();
+});
+
+function renderizarMapaOcorrencias() {
+  const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
+  if (window._leaflet_map) window._leaflet_map.remove();
+  const map = L.map('map').setView([41.5454, -8.4265], 13);
+  window._leaflet_map = map;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  let algumPino = false;
+  const posicoesUsadas = {};
+
+  ocorrencias.forEach((o, idx) => {
+    let lat = null, lng = null;
+    if (typeof o.localizacao === "string" && o.localizacao.includes(",")) {
+      [lat, lng] = o.localizacao.split(",").map(Number);
+    } else if (typeof o.localizacao === "object" && o.localizacao.lat && o.localizacao.lng) {
+      lat = o.localizacao.lat;
+      lng = o.localizacao.lng;
+    }
+    if (lat && lng) {
+      // Cria uma chave única para a posição
+      const key = lat + "," + lng;
+      // Conta quantos pinos já existem nesta posição
+      const count = posicoesUsadas[key] || 0;
+      posicoesUsadas[key] = count + 1;
+      // Se já existe, aplica um pequeno offset
+      const offset = count * 0.0002;
+      const latOffset = lat + offset;
+      algumPino = true;
+      L.marker([latOffset, lng]).addTo(map)
+        .bindPopup(`<b>${o.titulo}</b><br>${o.data || ""}`);
+    }
+  });
+
+  if (!algumPino) {
+    map.getContainer().innerHTML += '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:16px;border-radius:8px;box-shadow:0 2px 8px #0002;">Sem localizações válidas para mostrar no mapa.</div>';
+  }
+}
+// ...existing code...
 
       function migrarOcorrenciasAprovadas() {
         const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
         let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
-        const novas = ocorrencias
-          .filter(o => o.status === "aprovado" && !auditorias.some(a => a.idOcorrencia === o.id))
-          .map(o => ({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            idOcorrencia: o.id,
-            titulo: o.titulo,
-            detalhes: o.detalhes,
-            tipo: o.tipo,
-            data: o.data,
-            hora: o.hora,
-            localizacao: o.localizacao,
-            ficheiro: o.ficheiro,
-            estado: "em resolução",
-            perito: "",
-            materiais: [],
-            duracao: "",
-            custo: ""
-          }));
-        if (novas.length > 0) {
-          auditorias = [...auditorias, ...novas];
-          localStorage.setItem("auditorias", JSON.stringify(auditorias));
-        }
+
+        ocorrencias
+          .filter(o => o.status === "aprovado")
+          .forEach(o => {
+            const idx = auditorias.findIndex(a => String(a.idOcorrencia) === String(o.id));
+            if (idx === -1) {
+              // Se não existe, cria nova auditoria "por resolver"
+              auditorias.push({
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                idOcorrencia: o.id,
+                titulo: o.titulo,
+                tipo: o.tipo,
+                data: o.data,
+                hora: o.hora,
+                localizacao: o.localizacao,
+                ficheiro: o.ficheiro,
+                estado: "por resolver",
+                perito: "",
+                materiais: [],
+                duracao: "",
+                custo: ""
+              });
+            } else if (auditorias[idx].estado !== "por resolver") {
+              // Se já existe mas não está "por resolver", volta a pôr "por resolver"
+              auditorias[idx].estado = "por resolver";
+              auditorias[idx].perito = "";
+              auditorias[idx].materiais = [];
+              auditorias[idx].duracao = "";
+              auditorias[idx].custo = "";
+            }
+          });
+
+        localStorage.setItem("auditorias", JSON.stringify(auditorias));
       }
 
       function renderizarTabelaAuditorias() {
@@ -152,7 +213,7 @@
 
         for (const a of auditorias) {
           const corEstado = a.estado === "resolvido" ? "text-green-600" : (a.estado === "em resolução" ? "text-yellow-600" : "text-red-600");
-          const temPlano = a.peritos && a.peritos.length > 0 && a.materiais && a.materiais.length > 0 && a.custo !== undefined && a.custo !== "";
+          const temPlano = a.estado === "em resolução" || a.estado === "resolvido";
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="px-4 py-2">${a.titulo || "-"}</td>
@@ -167,7 +228,7 @@
             <td class="px-4 py-2 text-center">
               ${temPlano
                 ? `<button onclick="verRelatorioAuditoria('${a.idAuditoria || a.id}')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition">Ver Relatório</button>`
-                : `<button onclick="criarPlanoAuditoria(${a.idOcorrencia})" style="background-color:#0b0b5a" class="hover:bg-blue-800 text-white px-3 py-1 rounded text-sm transition">Criar Plano de Auditoria</button>`
+                : `<button onclick="criarPlanoAuditoria('${a.idOcorrencia}')" style="background-color:#0b0b5a" class="hover:bg-blue-800 text-white px-3 py-1 rounded text-sm transition">Criar Plano de Auditoria</button>`
               }
             </td>
           `;
@@ -187,21 +248,21 @@
 
       function criarPlanoAuditoria(id) {
         const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
-        const auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
+        let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
         const peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
         const materiais = JSON.parse(localStorage.getItem("materiais") || "[]");
-        const ocorrencia = ocorrencias.find(o => o.id === id);
+        const ocorrencia = ocorrencias.find(o => String(o.id) === String(id));
         if (!ocorrencia) return;
 
         const novoIDAuditoria = "AUD" + String(auditorias.length + 1).padStart(4, "0");
 
         // Filtra peritos pela especialidade igual ao tipo da ocorrência
-        const peritosFiltrados = peritos.filter(p => p.especialidade === ocorrencia.tipo);
+        const peritosFiltrados = peritos.filter(p => p.area === ocorrencia.tipo);
 
         // Gera HTML dos peritos (multi-select)
         const peritosHTML = peritosFiltrados.length === 0
           ? '<option disabled>Nenhum perito disponível</option>'
-          : peritosFiltrados.map(p => `<option value="${p.nome}">${p.nome} (${p.especialidade})</option>`).join('');
+          : peritosFiltrados.map(p => `<option value="${p.nome}">${p.nome} (${p.area})</option>`).join('');
 
         // Gera HTML dos materiais (checkbox + quantidade)
         const materiaisHTML = materiais.length === 0
@@ -230,10 +291,6 @@
 
               <label class="block mb-2 text-sm font-medium">Título da Ocorrência:</label>
               <input type="text" value="${ocorrencia.titulo}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
-
-              <label class="block mb-2 text-sm font-medium">Detalhes:</label>
-              <textarea class="w-full border p-2 mb-4 rounded bg-gray-100" disabled>${ocorrencia.detalhes}</textarea>
-
               <label class="block mb-2 text-sm font-medium">Data:</label>
               <input type="text" value="${ocorrencia.data}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
 
@@ -313,7 +370,7 @@
 
           // Atualiza auditoria existente
           let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
-          const idx = auditorias.findIndex(a => a.idOcorrencia === ocorrencia.id);
+          const idx = auditorias.findIndex(a => String(a.idOcorrencia) === String(ocorrencia.id));
           if (idx !== -1) {
             auditorias[idx] = {
               ...auditorias[idx],
@@ -322,25 +379,34 @@
               materiais: materiaisSelecionados,
               duracao,
               custo,
-              estado: auditorias[idx].estado || "em resolução" // <-- garante que o estado é guardado
+              estado: "em resolução" // muda para em resolução ao criar plano
             };
           } else {
             auditorias.push({
               idAuditoria,
               idOcorrencia: ocorrencia.id,
               titulo: ocorrencia.titulo,
-              detalhes: ocorrencia.detalhes,
               data: ocorrencia.data,
               peritos: peritosSelecionados,
               materiais: materiaisSelecionados,
               duracao,
               custo,
-              estado: "em resolução" // <-- novo plano começa sempre em resolução
+              estado: "em resolução"
             });
           }
           localStorage.setItem("auditorias", JSON.stringify(auditorias));
           modal.remove();
           renderizarTabelaAuditorias();
+
+          // Reduz quantidade dos materiais usados
+          let materiaisLS = JSON.parse(localStorage.getItem("materiais") || "[]");
+          materiaisSelecionados.forEach(matSel => {
+            const idxMat = materiaisLS.findIndex(m => m.nome === matSel.nome);
+            if (idxMat !== -1) {
+              materiaisLS[idxMat].quantidade = Math.max(0, (parseInt(materiaisLS[idxMat].quantidade) || 0) - matSel.quantidade);
+            }
+          });
+          localStorage.setItem("materiais", JSON.stringify(materiaisLS));
         };
       }
 
@@ -367,7 +433,6 @@
             <div class="mb-2"><b>Materiais:</b> ${materiais || "-"}</div>
             <div class="mb-2"><b>Custo Total:</b> ${custo} €</div>
             <div class="mb-2"><b>Duração Estimada:</b> ${a.duracao || "-"} horas</div>
-            <div class="mb-2"><b>Detalhes:</b> ${a.detalhes || "-"}</div>
           </div>
         `;
         document.body.appendChild(modal);
