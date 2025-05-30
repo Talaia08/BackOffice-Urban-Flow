@@ -121,7 +121,7 @@
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data/Hora</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                 </tr> 
               </thead>
@@ -215,8 +215,8 @@
               const row = document.createElement('tr');
               row.classList.add('hover:bg-gray-100', 'cursor-pointer');
               row.innerHTML = `
-                <td class="px-4 py-2 border">${ocorrencia.titulo}</td>
-                <td class="px-4 py-2 border">${ocorrencia.data}</td>
+                <td class="px-4 py-2 border">${ocorrencia.descricao}</td>
+                <td class="px-4 py-2 border">${ocorrencia.dataHora}</td>
                 <td class="px-4 py-2 border">${ocorrencia.status.charAt(0).toUpperCase() + ocorrencia.status.slice(1).toLowerCase()}</td>
               `;
               row.addEventListener('click', () => {

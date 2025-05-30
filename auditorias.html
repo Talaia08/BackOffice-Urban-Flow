@@ -10,6 +10,16 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- ...existing code... -->
+
+  <style>
+  #map {
+    z-index: 10 !important;
+    position: relative;
+  }
+  .modal-auditoria {
+    z-index: 9999 !important;
+  }
+</style>
   </head>
   <body class="flex bg-gray-100 font-sans">
     <!-- Sidebar -->
@@ -103,7 +113,7 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data/Hora</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"></th>
               </tr>
@@ -158,7 +168,7 @@ function renderizarMapaOcorrencias() {
       const latOffset = lat + offset;
       algumPino = true;
       L.marker([latOffset, lng]).addTo(map)
-        .bindPopup(`<b>${o.titulo}</b><br>${o.data || ""}`);
+        .bindPopup(`<b>${o.descricao}</b><br>${o.dataHora || ""}`);
     }
   });
 
@@ -181,10 +191,9 @@ function renderizarMapaOcorrencias() {
               auditorias.push({
                 id: Date.now() + Math.floor(Math.random() * 1000),
                 idOcorrencia: o.id,
-                titulo: o.titulo,
+                descricao: o.descricao,
                 tipo: o.tipo,
-                data: o.data,
-                hora: o.hora,
+                dataHora: o.dataHora,
                 localizacao: o.localizacao,
                 ficheiro: o.ficheiro,
                 estado: "por resolver",
@@ -216,8 +225,8 @@ function renderizarMapaOcorrencias() {
           const temPlano = a.estado === "em resolução" || a.estado === "resolvido";
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td class="px-4 py-2">${a.titulo || "-"}</td>
-            <td class="px-4 py-2">${a.data || "-"}</td>
+            <td class="px-4 py-2">${a.descricao || "-"}</td>
+            <td class="px-4 py-2">${a.dataHora || "-"}</td>
             <td class="px-4 py-2 ${corEstado} capitalize">
               <select onchange="alterarEstadoAuditoria('${a.idAuditoria || a.id}', this.value)" class="border rounded px-2 py-1">
                 <option value="em resolução" ${a.estado === "em resolução" ? "selected" : ""}>Em Resolução</option>
@@ -277,7 +286,7 @@ function renderizarMapaOcorrencias() {
 
         // Modal para criar plano de auditoria
         const modal = document.createElement("div");
-        modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
+modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-auditoria";
         modal.innerHTML = `
           <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative animate-fadeIn overflow-y-auto max-h-[90vh]">
             <button onclick="this.parentElement.parentElement.remove()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
@@ -290,12 +299,9 @@ function renderizarMapaOcorrencias() {
               <input type="text" value="${ocorrencia.tipo || ''}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
 
               <label class="block mb-2 text-sm font-medium">Título da Ocorrência:</label>
-              <input type="text" value="${ocorrencia.titulo}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
-              <label class="block mb-2 text-sm font-medium">Data:</label>
-              <input type="text" value="${ocorrencia.data}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
-
-              <label class="block mb-2 text-sm font-medium">Hora:</label>
-              <input type="text" value="${ocorrencia.hora}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
+              <input type="text" value="${ocorrencia.descricao}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
+              <label class="block mb-2 text-sm font-medium">Data/Hora:</label>
+              <input type="text" value="${ocorrencia.dataHora}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
 
               <label class="block mb-2 text-sm font-medium">Localização:</label>
               <input type="text" value="${ocorrencia.localizacao}" class="w-full border p-2 mb-4 rounded bg-gray-100" disabled />
@@ -385,8 +391,8 @@ function renderizarMapaOcorrencias() {
             auditorias.push({
               idAuditoria,
               idOcorrencia: ocorrencia.id,
-              titulo: ocorrencia.titulo,
-              data: ocorrencia.data,
+              descricao: ocorrencia.descricao,
+              dataHora: ocorrencia.dataHora,
               peritos: peritosSelecionados,
               materiais: materiaisSelecionados,
               duracao,
@@ -426,8 +432,8 @@ function renderizarMapaOcorrencias() {
             <button onclick="this.parentElement.parentElement.remove()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             <h2 class="text-xl font-bold mb-4">Relatório da Auditoria</h2>
             <div class="mb-2"><b>ID:</b> ${a.idAuditoria || a.id}</div>
-            <div class="mb-2"><b>Título:</b> ${a.titulo || "-"}</div>
-            <div class="mb-2"><b>Data:</b> ${a.data || "-"}</div>
+            <div class="mb-2"><b>Título:</b> ${a.descricao || "-"}</div>
+            <div class="mb-2"><b>Data/Hora:</b> ${a.dataHora || "-"}</div>
             <div class="mb-2"><b>Estado:</b> ${a.estado || "-"}</div>
             <div class="mb-2"><b>Peritos:</b> ${peritos || "-"}</div>
             <div class="mb-2"><b>Materiais:</b> ${materiais || "-"}</div>
