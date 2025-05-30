@@ -196,15 +196,15 @@ function renderizarMapaOcorrencias() {
                 dataHora: o.dataHora,
                 localizacao: o.localizacao,
                 ficheiro: o.ficheiro,
-                estado: "por resolver",
+                estadoOcorrencia: "por resolver",
                 profileP: "",
                 materiais: [],
                 duracao: "",
                 custo: ""
               });
-            } else if (auditorias[idx].estado !== "por resolver") {
+            } else if (auditorias[idx].estadoOcorrencia !== "por resolver") {
               // Se já existe mas não está "por resolver", volta a pôr "por resolver"
-              auditorias[idx].estado = "por resolver";
+              auditorias[idx].estadoOcorrencia = "por resolver";
               auditorias[idx].profileP = "";
               auditorias[idx].materiais = [];
               auditorias[idx].duracao = "";
@@ -221,17 +221,17 @@ function renderizarMapaOcorrencias() {
         tbody.innerHTML = "";
 
         for (const a of auditorias) {
-          const corEstado = a.estado === "resolvido" ? "text-green-600" : (a.estado === "em resolução" ? "text-yellow-600" : "text-red-600");
-          const temPlano = a.estado === "em resolução" || a.estado === "resolvido";
+          const corEstado = a.estadoOcorrencia === "resolvido" ? "text-green-600" : (a.estadoOcorrencia === "em resolução" ? "text-yellow-600" : "text-red-600");
+          const temPlano = a.estadoOcorrencia === "em resolução" || a.estadoOcorrencia === "resolvido";
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="px-4 py-2">${a.descricao || "-"}</td>
             <td class="px-4 py-2">${a.dataHora || "-"}</td>
             <td class="px-4 py-2 ${corEstado} capitalize">
               <select onchange="alterarEstadoAuditoria('${a.idAuditoria || a.id}', this.value)" class="border rounded px-2 py-1">
-                <option value="em resolução" ${a.estado === "em resolução" ? "selected" : ""}>Em Resolução</option>
-                <option value="resolvido" ${a.estado === "resolvido" ? "selected" : ""}>Resolvido</option>
-                <option value="por resolver" ${a.estado === "por resolver" ? "selected" : ""}>Por Resolver</option>
+                <option value="em resolução" ${a.estadoOcorrencia === "em resolução" ? "selected" : ""}>Em Resolução</option>
+                <option value="resolvido" ${a.estadoOcorrencia === "resolvido" ? "selected" : ""}>Resolvido</option>
+                <option value="por resolver" ${a.estadoOcorrencia === "por resolver" ? "selected" : ""}>Por Resolver</option>
               </select>
             </td>
             <td class="px-4 py-2 text-center">
@@ -249,7 +249,7 @@ function renderizarMapaOcorrencias() {
         let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
         const idx = auditorias.findIndex(a => (a.idAuditoria || a.id) == id);
         if (idx !== -1) {
-          auditorias[idx].estado = novoEstado;
+          auditorias[idx].estadoOcorrencia = novoEstado;
           localStorage.setItem("auditorias", JSON.stringify(auditorias));
           renderizarTabelaAuditorias();
         }
@@ -385,7 +385,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
               materiais: materiaisSelecionados,
               duracao,
               custo,
-              estado: "em resolução" // muda para em resolução ao criar plano
+              estadoOcorrencia: "em resolução" // muda para em resolução ao criar plano
             };
           } else {
             auditorias.push({
@@ -397,7 +397,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
               materiais: materiaisSelecionados,
               duracao,
               custo,
-              estado: "em resolução"
+              estadoOcorrencia: "em resolução"
             });
           }
           localStorage.setItem("auditorias", JSON.stringify(auditorias));
@@ -434,7 +434,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
             <div class="mb-2"><b>ID:</b> ${a.idAuditoria || a.id}</div>
             <div class="mb-2"><b>Título:</b> ${a.descricao || "-"}</div>
             <div class="mb-2"><b>Data/Hora:</b> ${a.dataHora || "-"}</div>
-            <div class="mb-2"><b>Estado:</b> ${a.estado || "-"}</div>
+            <div class="mb-2"><b>Estado:</b> ${a.estadoOcorrencia || "-"}</div>
             <div class="mb-2"><b>Peritos:</b> ${profileP || "-"}</div>
             <div class="mb-2"><b>Materiais:</b> ${materiais || "-"}</div>
             <div class="mb-2"><b>Custo Total:</b> ${custo} €</div>
