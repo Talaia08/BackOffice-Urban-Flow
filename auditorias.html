@@ -197,7 +197,7 @@ function renderizarMapaOcorrencias() {
                 localizacao: o.localizacao,
                 ficheiro: o.ficheiro,
                 estado: "por resolver",
-                perito: "",
+                profileP: "",
                 materiais: [],
                 duracao: "",
                 custo: ""
@@ -205,7 +205,7 @@ function renderizarMapaOcorrencias() {
             } else if (auditorias[idx].estado !== "por resolver") {
               // Se já existe mas não está "por resolver", volta a pôr "por resolver"
               auditorias[idx].estado = "por resolver";
-              auditorias[idx].perito = "";
+              auditorias[idx].profileP = "";
               auditorias[idx].materiais = [];
               auditorias[idx].duracao = "";
               auditorias[idx].custo = "";
@@ -258,7 +258,7 @@ function renderizarMapaOcorrencias() {
       function criarPlanoAuditoria(id) {
         const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
         let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
-        const peritos = JSON.parse(localStorage.getItem("peritos") || "[]");
+        const profileP = JSON.parse(localStorage.getItem("profileP") || "[]");
         const materiais = JSON.parse(localStorage.getItem("materiais") || "[]");
         const ocorrencia = ocorrencias.find(o => String(o.id) === String(id));
         if (!ocorrencia) return;
@@ -266,12 +266,12 @@ function renderizarMapaOcorrencias() {
         const novoIDAuditoria = "AUD" + String(auditorias.length + 1).padStart(4, "0");
 
         // Filtra peritos pela especialidade igual ao tipo da ocorrência
-        const peritosFiltrados = peritos.filter(p => p.area === ocorrencia.tipo);
+        const peritosFiltrados = profileP.filter(p => p.speciality === ocorrencia.tipo);
 
         // Gera HTML dos peritos (multi-select)
         const peritosHTML = peritosFiltrados.length === 0
           ? '<option disabled>Nenhum perito disponível</option>'
-          : peritosFiltrados.map(p => `<option value="${p.nome}">${p.nome} (${p.area})</option>`).join('');
+          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.speciality})</option>`).join('');
 
         // Gera HTML dos materiais (checkbox + quantidade)
         const materiaisHTML = materiais.length === 0
@@ -310,7 +310,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
               <button type="button" onclick="verFicheiroOcorrencia('${ocorrencia.ficheiro || ''}')" class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded mb-4">Ver Foto/Ficheiro</button>
 
               <label class="block mb-2 text-sm font-medium">Peritos Atribuídos:</label>
-              <select id="peritos-auditoria" class="w-full border p-2 mb-4 rounded" multiple required>
+              <select id="profileP-auditoria" class="w-full border p-2 mb-4 rounded" multiple required>
                 ${peritosHTML}
               </select>
 
@@ -361,7 +361,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
         modal.querySelector("#form-plano-auditoria").onsubmit = function(e) {
           e.preventDefault();
           const idAuditoria = document.getElementById("id-auditoria").value;
-          const peritosSelecionados = Array.from(document.getElementById("peritos-auditoria").selectedOptions).map(opt => opt.value);
+          const peritosSelecionados = Array.from(document.getElementById("profileP-auditoria").selectedOptions).map(opt => opt.value);
 
           // Materiais selecionados com quantidade
           const materiaisSelecionados = [];
@@ -381,7 +381,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
             auditorias[idx] = {
               ...auditorias[idx],
               idAuditoria,
-              peritos: peritosSelecionados,
+              profileP: peritosSelecionados,
               materiais: materiaisSelecionados,
               duracao,
               custo,
@@ -393,7 +393,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
               idOcorrencia: ocorrencia.id,
               descricao: ocorrencia.descricao,
               dataHora: ocorrencia.dataHora,
-              peritos: peritosSelecionados,
+              profileP: peritosSelecionados,
               materiais: materiaisSelecionados,
               duracao,
               custo,
@@ -421,7 +421,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
         const a = auditorias.find(a => (a.idAuditoria || a.id) == id);
         if (!a) return alert("Auditoria não encontrada!");
 
-        const peritos = (a.peritos || []).join(", ");
+        const profileP = (a.profileP || []).join(", ");
         const materiais = (a.materiais || []).map(m => `${m.nome} (x${m.quantidade})`).join(", ");
         const custo = a.custo || "0";
 
@@ -435,7 +435,7 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
             <div class="mb-2"><b>Título:</b> ${a.descricao || "-"}</div>
             <div class="mb-2"><b>Data/Hora:</b> ${a.dataHora || "-"}</div>
             <div class="mb-2"><b>Estado:</b> ${a.estado || "-"}</div>
-            <div class="mb-2"><b>Peritos:</b> ${peritos || "-"}</div>
+            <div class="mb-2"><b>Peritos:</b> ${profileP || "-"}</div>
             <div class="mb-2"><b>Materiais:</b> ${materiais || "-"}</div>
             <div class="mb-2"><b>Custo Total:</b> ${custo} €</div>
             <div class="mb-2"><b>Duração Estimada:</b> ${a.duracao || "-"} horas</div>
@@ -453,7 +453,8 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
           window.open(base64, "_blank");
         } else {
           const imgModal = document.createElement("div");
-          imgModal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50";
+          imgModal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-70";
+          imgModal.style.zIndex = "10000"; // <-- Garante que fica acima de tudo
           imgModal.innerHTML = `
             <div class="relative">
               <button onclick="this.parentElement.parentElement.remove()" class="absolute top-0 right-0 m-2 text-white text-3xl">&times;</button>
