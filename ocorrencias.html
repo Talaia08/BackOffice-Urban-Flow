@@ -123,7 +123,7 @@
           <!-- Modal Content -->
           <div id="modal-content" class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative animate-fadeIn scale-95 opacity-0 transition-all duration-200">
             <button onclick="fecharModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            <h2 id="modal-titulo" class="text-xl font-bold text-gray-800 mb-2"></h2>
+            <h2 id="modal-descricao" class="text-xl font-bold text-gray-800 mb-2"></h2>
             <p id="modal-detalhes" class="text-gray-700 mb-2"></p>
             <p><strong>Tipo:</strong> <span id="modal-tipo" class="text-sm"></span></p>
             <p><strong>Estado:</strong> <span id="modal-status" class="text-sm"></span></p>
@@ -160,9 +160,9 @@
                 <label class="block mb-2 text-sm font-medium">Tempo de Atraso (min):</label>
                 <input type="number" id="novo-tempo-atraso" class="w-full border p-2 mb-4 rounded" min="1" />
               </div>
-              <div id="campos-titulo-detalhes">
+              <div id="campos-descricao-detalhes">
                 <label class="block mb-2 text-sm font-medium">Título:</label>
-                <input type="text" id="novo-titulo" required class="w-full border p-2 mb-4 rounded" />
+                <input type="text" id="novo-descricao" required class="w-full border p-2 mb-4 rounded" />
               </div>
               <label class="block mb-2 text-sm font-medium">Localização (coordenadas):</label>
               <div class="flex gap-2 mb-4">
@@ -197,7 +197,7 @@
               o.status === "rejeitado" ? "text-red-600" : "text-gray-600";
             const tr = document.createElement("tr");
             tr.innerHTML = `
-              <td class="border px-4 py-2">${o.titulo}</td>
+              <td class="border px-4 py-2">${o.descricao}</td>
               <td class="border px-4 py-2">${o.data}</td>
               <td class="border px-4 py-2 ${corStatus} capitalize">${o.status}</td>
               <td class="border px-4 py-2 text-center">
@@ -302,7 +302,7 @@
             return;
           }
 
-          const titulo = document.getElementById("novo-titulo").value;
+          const descricao = document.getElementById("novo-descricao").value;
           const localizacao = document.getElementById("novo-localizacao").value;
           const data = document.getElementById("novo-data").value;
           const hora = document.getElementById("novo-hora").value;
@@ -313,7 +313,7 @@
             const novaOcorrencia = {
               id: novoId,
               tipo,
-              titulo,
+              descricao,
               localizacao,
               data,
               hora,
@@ -352,7 +352,7 @@
                 auditorias.push({
                   idAuditoria: "AUD" + String(novoIDAuditoria).padStart(4, "0"),
                   idOcorrencia: o.id,
-                  titulo: o.titulo,
+                  descricao: o.descricao,
                   detalhes: o.detalhes,
                   data: o.data,
                   tipo: o.tipo,
@@ -417,7 +417,7 @@
           document.getElementById("menu-criar").classList.add("hidden");
           document.getElementById("form-criar").reset();
           document.getElementById("campos-atraso").classList.add("hidden");
-          document.getElementById("novo-titulo").required = true;
+          document.getElementById("novo-descricao").required = true;
         }
 
         function obterCoordenadas() {
@@ -472,7 +472,7 @@
           const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
           const o = ocorrencias.find(o => o.id === id);
           if (!o) return;
-          document.getElementById("modal-titulo").textContent = o.titulo;
+          document.getElementById("modal-descricao").textContent = o.descricao;
           document.getElementById("modal-tipo").textContent = o.tipo || "-";
           document.getElementById("modal-status").textContent = o.status;
           document.getElementById("modal-ver-foto").onclick = function() {
@@ -515,8 +515,8 @@
               <button onclick="this.parentElement.parentElement.remove()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
               <h2 class="text-xl font-bold mb-4">Editar Ocorrência</h2>
               <form id="form-editar">
-                <label class="block mb-2 text-sm font-medium">Título:</label>
-                <input type="text" id="edit-titulo" value="${o.titulo}" required class="w-full border p-2 mb-4 rounded" />
+                <label class="block mb-2 text-sm font-medium">Descrição:</label>
+                <input type="text" id="edit-descricao" value="${o.descricao}" required class="w-full border p-2 mb-4 rounded" />
                 <label class="block mb-2 text-sm font-medium">Localização (coordenadas):</label>
                 <div class="flex gap-2 mb-4">
                   <input type="text" id="edit-localizacao" value="${o.localizacao}" required class="w-full border p-2 rounded" />
@@ -535,7 +535,7 @@
           document.body.appendChild(modal);
           document.getElementById("form-editar").onsubmit = function(e) {
             e.preventDefault();
-            o.titulo = document.getElementById("edit-titulo").value;
+            o.descricao = document.getElementById("edit-descricao").value;
             o.localizacao = document.getElementById("edit-localizacao").value;
             o.data = document.getElementById("edit-data").value;
             o.hora = document.getElementById("edit-hora").value;
@@ -564,21 +564,21 @@ function mostrarCamposAtraso() {
   const camposAtraso = document.getElementById("campos-atraso");
   const campoFicheiro = document.getElementById("novo-ficheiro");
   const labelFicheiro = document.getElementById("label-ficheiro");
-  const camposTituloDetalhes = document.getElementById("campos-titulo-detalhes");
-  const titulo = document.getElementById("novo-titulo");
+  const camposDescricaoDetalhes = document.getElementById("campos-descricao-detalhes");
+  const descricao = document.getElementById("novo-descricao");
 
   if (tipo === "Atrasos") {
     camposAtraso.classList.remove("hidden");
-    camposTituloDetalhes.classList.add("hidden"); // Esconde o campo Título
+    camposDescricaoDetalhes.classList.add("hidden"); // Esconde o campo Título
     campoFicheiro.classList.add("hidden");
     labelFicheiro.classList.add("hidden");
-    titulo.required = false;
+    descricao.required = false;
   } else {
     camposAtraso.classList.add("hidden");
-    camposTituloDetalhes.classList.remove("hidden"); // Mostra o campo Título
+    camposDescricaoDetalhes.classList.remove("hidden"); // Mostra o campo Título
     campoFicheiro.classList.remove("hidden");
     labelFicheiro.classList.remove("hidden");
-    titulo.required = true;
+    descricao.required = true;
   }
 }
 
