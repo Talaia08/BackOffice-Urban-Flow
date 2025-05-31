@@ -269,10 +269,10 @@
             <td class="px-4 py-2">${p.name}</td>
             <td class="px-4 py-2">${p.specialty}</td>
             <td class="px-4 py-2 flex gap-2">
-              <button onclick="abrirModalEditarPerito('${p.name.replace(/'/g, "\\'")}')" class="text-yellow-600 hover:bg-yellow-100 rounded p-2" title="Editar">
+              <button onclick="abrirModalEditarPerito('${p.name.replace(/'/g, "\\'")}')" class="text-yellow-600 hover:bg-yellow-600 hover:text-white hover:scale-110 transition-all duration-200 rounded p-2" title="Editar">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button onclick="removerPerito('${p.name.replace(/'/g, "\\'")}')" class="text-red-600 hover:bg-red-100 rounded p-2" title="Remover">
+              <button onclick="removerPerito('${p.name.replace(/'/g, "\\'")}')" class="text-red-600 hover:bg-red-600 hover:text-white hover:scale-110 transition-all duration-200 rounded p-2" title="Remover">
                 <i class="bi bi-trash"></i>
               </button>
             </td>

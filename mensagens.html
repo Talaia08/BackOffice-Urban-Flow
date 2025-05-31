@@ -48,7 +48,6 @@
       <!-- Topbar -->
       <header id="topbar" class="flex justify-between items-center bg-white shadow px-6 py-2 fixed top-0 z-10 w-[calc(100%-16rem)]">
         <button id="toggle-btn" class="text-black text-xl" onclick="toggleSidebar()">☰</button>
-        <h3 class="text-lg font-semibold">Admin Urban Flow</h3>
         <button class="text-black" onclick="logout()">
           <i class="bi bi-person-circle text-2xl"></i>
         </button>
@@ -58,6 +57,9 @@
       <main class="pt-16 px-6 pb-6">
         <h1 class="text-2xl font-semibold mb-4">Mensagens Recebidas</h1>
         <div id="mensagensContainer" class="space-y-4"></div>
+
+        <h1 class="text-2xl font-semibold mb-4 mt-8">Avaliações da Aplicação</h1>
+        <div id="avaliacoesPWA" class="space-y-4"></div>
       </main>
     </div>
 
@@ -85,6 +87,50 @@
           topbar.classList.remove('w-[calc(100%-16rem)]');
           topbar.classList.add('w-full');
         }
+      }
+      
+      // Carrega avaliações da PWA do localStorage
+      function renderAvaliacoesPWA() {
+        const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
+        const pwaDiv = document.getElementById('avaliacoesPWA');
+        pwaDiv.innerHTML = '';
+
+        if (avaliacoes.length === 0) {
+          pwaDiv.innerHTML = '<p class="text-gray-500">Nenhuma avaliação da aplicação.</p>';
+          return;
+        }
+
+        avaliacoes.reverse().forEach(av => {
+          // Só mostra avaliações da PWA (se usares origem, filtra aqui)
+          if (av.origem && av.origem !== 'PWA') return;
+
+          const card = document.createElement('div');
+          card.className = 'bg-white shadow-md rounded p-4';
+
+          // Mostra estrelas para cada categoria
+          let categoriasHtml = '';
+          (av.categorias || []).forEach(cat => {
+            categoriasHtml += `
+              <div class="mb-1 flex items-center gap-2">
+                <span class="font-semibold">${cat.nome}:</span>
+                <span>
+                  ${'★'.repeat(cat.valor)}${'☆'.repeat(5 - cat.valor)}
+                </span>
+              </div>
+            `;
+          });
+
+          card.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm text-gray-500">${new Date(av.data).toLocaleString()}</span>
+              <span class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">Aplicação</span>
+            </div>
+            <div class="mb-2">${categoriasHtml}</div>
+            <p class="text-sm text-gray-600"><strong>Comentário:</strong> ${av.comentario || '-'}</p>
+          `;
+
+          pwaDiv.appendChild(card);
+        });
       }
 
       // Carrega mensagens do localStorage
@@ -115,7 +161,10 @@
         });
       }
 
-      window.onload = carregarMensagens;
+      window.onload = function() {
+        carregarMensagens();
+        renderAvaliacoesPWA();
+      };
     </script>
   </body>
 </html>
