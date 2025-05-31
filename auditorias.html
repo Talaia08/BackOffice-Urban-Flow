@@ -229,7 +229,8 @@ function renderizarMapaOcorrencias() {
             </td>
             <td class="px-4 py-2 text-center">
               ${temPlano
-                ? `<button onclick="verRelatorioAuditoria('${a.idAuditoria || a.id}')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition">Ver Relatório</button>`
+                ? `<button onclick="verRelatorioAuditoria('${a.idAuditoria || a.id}')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition">Ver Relatório</button>
+                <button onclick="verRelatorioPerito('${a.idAuditoria || a.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition ml-2">Ver Relatório do Perito</button>`
                 : `<button onclick="criarPlanoAuditoria('${a.idOcorrencia}')" style="background-color:#0b0b5a" class="hover:bg-blue-800 text-white px-3 py-1 rounded text-sm transition">Criar Plano de Auditoria</button>`
               }
             </td>
@@ -248,6 +249,57 @@ function renderizarMapaOcorrencias() {
         }
       }
 
+      function verRelatorioPerito(id) {
+        const auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
+        const idx = auditorias.findIndex(a => (a.idAuditoria || a.id) == id);
+        if (idx === -1) return alert("Auditoria não encontrada!");
+
+        const relatorio = auditorias[idx].relatorioPerito;
+        if (!relatorio || (typeof relatorio === "string" && relatorio.trim() === "")) {
+          alert("Ainda não existe relatório do perito para esta auditoria.");
+          return;
+        }
+
+        // Se for string antiga, mostra como estava
+        if (typeof relatorio === "string") {
+          mostrarModalRelatorio(relatorio);
+          auditorias[idx].estadoOcorrencia = "resolvido";
+          localStorage.setItem("auditorias", JSON.stringify(auditorias));
+          renderizarTabelaAuditorias();
+          return;
+        }
+
+        // Se for objeto, mostra os campos
+        const modal = document.createElement("div");
+        modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
+        modal.innerHTML = `
+          <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative animate-fadeIn overflow-y-auto max-h-[90vh]">
+            <button onclick="this.parentElement.parentElement.remove()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Relatório do Perito</h2>
+            <div class="mb-2"><b>Perito:</b> ${relatorio.perito || "-"}</div>
+            <div class="mb-2"><b>Data de Criação:</b> ${relatorio.dataCriacao || "-"}</div>
+            <div class="mb-2"><b>Duração:</b> ${relatorio.duracao || "-"}</div>
+            <div class="mb-2"><b>Descrição da Ocorrência:</b> ${relatorio.descricaoOcorrencia || "-"}</div>
+            <div class="mb-2"><b>Materiais:</b> ${
+              Array.isArray(relatorio.materiais)
+                ? relatorio.materiais.map(m => `${m.nome} (x${m.quantidade})`).join(", ")
+                : "-"
+            }</div>
+            <div class="mb-2"><b>Procedimento:</b> ${relatorio.procedimento || "-"}</div>
+            <div class="mb-2"><b>Arquivos:</b> ${
+              Array.isArray(relatorio.arquivos) && relatorio.arquivos.length
+                ? relatorio.arquivos.map((a, i) => `<a href="${a}" target="_blank">Ficheiro ${i + 1}</a>`).join(", ")
+                : "-"
+            }</div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        auditorias[idx].estadoOcorrencia = "resolvido";
+        localStorage.setItem("auditorias", JSON.stringify(auditorias));
+        renderizarTabelaAuditorias();
+        }
+
       function criarPlanoAuditoria(id) {
         const ocorrencias = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
         let auditorias = JSON.parse(localStorage.getItem("auditorias") || "[]");
@@ -264,7 +316,7 @@ function renderizarMapaOcorrencias() {
         // Gera HTML dos peritos (multi-select)
         const peritosHTML = peritosFiltrados.length === 0
           ? '<option disabled>Nenhum perito disponível</option>'
-          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.specialty})</option>`).join('');
+          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.speciality})</option>`).join('');
 
         // Gera HTML dos materiais (checkbox + quantidade)
         const materiaisHTML = materiais.length === 0
@@ -378,7 +430,8 @@ modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-op
               materiais: materiaisSelecionados,
               duracao,
               custo,
-              estadoOcorrencia: "em resolução" // muda para em resolução ao criar plano
+              estadoOcorrencia: "em resolução",// muda para em resolução ao criar plano
+              relatorioPerito: auditorias[idx].relatorioPerito || ""
             };
           } else {
             auditorias.push({
