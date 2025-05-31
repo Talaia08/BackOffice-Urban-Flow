@@ -145,7 +145,7 @@
           <input type="date" id="profileP-dob" required class="w-full border px-2 py-1 rounded mb-2" />
 
           <label class="block mb-1">Área:</label>
-          <select id="profileP-speciality" required class="w-full border px-2 py-1 rounded mb-2">
+          <select id="profileP-specialty" required class="w-full border px-2 py-1 rounded mb-2">
             <option value="">Selecione</option>
             <option value="Paragens">Paragens</option>
             <option value="Autocarros">Autocarros</option>
@@ -175,7 +175,7 @@
         document.getElementById("profileP-name").value = "";
         document.getElementById("profileP-email").value = "";
         document.getElementById("profileP-dob").value = "";
-        document.getElementById("profileP-speciality").value = "";
+        document.getElementById("profileP-specialty").value = "";
         document.getElementById("profileP-location").value = "";
         document.getElementById("profileP-address").value = "";
         document.getElementById("profileP-phone").value = "";
@@ -190,7 +190,7 @@
         document.getElementById("profileP-name").value = perito.name;
         document.getElementById("profileP-email").value = perito.email;
         document.getElementById("profileP-dob").value = perito.dob;
-        document.getElementById("profileP-speciality").value = perito.speciality;
+        document.getElementById("profileP-specialty").value = perito.specialty;
         document.getElementById("profileP-location").value = perito.location;
         document.getElementById("profileP-address").value = perito.address;
         document.getElementById("profileP-phone").value = perito.phone;
@@ -210,12 +210,12 @@
         const name = document.getElementById("profileP-name").value.trim();
         const email = document.getElementById("profileP-email").value.trim();
         const dob = document.getElementById("profileP-dob").value;
-        const speciality = document.getElementById("profileP-speciality").value;
+        const specialty = document.getElementById("profileP-specialty").value;
         const location = document.getElementById("profileP-location").value.trim();
         const address = document.getElementById("profileP-address").value.trim();
         const phone = document.getElementById("profileP-phone").value.trim();
 
-        if (!name || !email || !dob || !speciality || !location || !address || !phone) {
+        if (!name || !email || !dob || !specialty || !location || !address || !phone) {
           alert("Preencha todos os campos!");
           return;
         }
@@ -234,7 +234,7 @@
           }
           const idx = profileP.findIndex(p => p.name === peritoEditando);
           if (idx !== -1) {
-            profileP[idx] = { name, email, dob, speciality, location, address, phone};
+            profileP[idx] = { name, email, dob, specialty, location, address, phone};
           }
           peritoEditando = null;
         } else {
@@ -243,7 +243,7 @@
             alert("⚠️ Este perito já existe.");
             return;
           }
-          profileP.push({ name, email, dob, speciality, location, address, phone});
+          profileP.push({ name, email, dob, specialty, location, address, phone});
         }
 
         localStorage.setItem("profileP", JSON.stringify(profileP));
@@ -267,7 +267,7 @@
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="px-4 py-2">${p.name}</td>
-            <td class="px-4 py-2">${p.speciality}</td>
+            <td class="px-4 py-2">${p.specialty}</td>
             <td class="px-4 py-2 flex gap-2">
               <button onclick="abrirModalEditarPerito('${p.name.replace(/'/g, "\\'")}')" class="text-yellow-600 hover:bg-yellow-100 rounded p-2" title="Editar">
                 <i class="bi bi-pencil"></i>

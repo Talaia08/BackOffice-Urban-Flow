@@ -202,14 +202,7 @@ function renderizarMapaOcorrencias() {
                 duracao: "",
                 custo: ""
               });
-            } else if (auditorias[idx].estadoOcorrencia !== "por resolver") {
-              // Se já existe mas não está "por resolver", volta a pôr "por resolver"
-              auditorias[idx].estadoOcorrencia = "por resolver";
-              auditorias[idx].profileP = "";
-              auditorias[idx].materiais = [];
-              auditorias[idx].duracao = "";
-              auditorias[idx].custo = "";
-            }
+            } 
           });
 
         localStorage.setItem("auditorias", JSON.stringify(auditorias));
