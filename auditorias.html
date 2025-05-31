@@ -259,12 +259,12 @@ function renderizarMapaOcorrencias() {
         const novoIDAuditoria = "AUD" + String(auditorias.length + 1).padStart(4, "0");
 
         // Filtra peritos pela especialidade igual ao tipo da ocorrência
-        const peritosFiltrados = profileP.filter(p => p.speciality === ocorrencia.tipo);
+        const peritosFiltrados = profileP.filter(p => p.specialty === ocorrencia.tipo);
 
         // Gera HTML dos peritos (multi-select)
         const peritosHTML = peritosFiltrados.length === 0
           ? '<option disabled>Nenhum perito disponível</option>'
-          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.speciality})</option>`).join('');
+          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.specialty})</option>`).join('');
 
         // Gera HTML dos materiais (checkbox + quantidade)
         const materiaisHTML = materiais.length === 0
