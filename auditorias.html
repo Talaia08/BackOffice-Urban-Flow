@@ -316,7 +316,7 @@ function renderizarMapaOcorrencias() {
         // Gera HTML dos peritos (multi-select)
         const peritosHTML = peritosFiltrados.length === 0
           ? '<option disabled>Nenhum perito disponível</option>'
-          : peritosFiltrados.map(p => `<option value="${p.name}">${p.name} (${p.specialty})</option>`).join('');
+          : peritosFiltrados.map(p => `<option value="${p.email}">${p.name} (${p.specialty})</option>`)
 
         // Gera HTML dos materiais (checkbox + quantidade)
         const materiaisHTML = materiais.length === 0
