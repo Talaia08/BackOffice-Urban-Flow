@@ -154,13 +154,16 @@
             const resolvidasPorMes = Array(12).fill(0);
 
             ocorrencias.forEach(o => {
-                if (o.data) {
-                    const [ano, mes] = o.data.split("-");
-                    const idx = parseInt(mes, 10) - 1;
-                    if (idx >= 0 && idx < 12) {
-                        if ((o.status || o.estado || "").toLowerCase() === "aprovado") aprovadasPorMes[idx]++;
-                        if ((o.status || o.estado || "").toLowerCase() === "rejeitado") rejeitadasPorMes[idx]++;
-                        if ((o.estado || o.status || "").toLowerCase() === "resolvido") resolvidasPorMes[idx]++;
+                // Usa dataHora ou data
+                const dataStr = o.dataHora || o.data;
+                if (dataStr) {
+                    // Extrai mês do formato "YYYY-MM-DD" ou "YYYY-MM-DDTHH:mm"
+                    const mes = parseInt(dataStr.substr(5,2), 10) - 1;
+                    if (mes >= 0 && mes < 12) {
+                        const estado = (o.status || o.estado || "").toLowerCase();
+                        if (estado === "aprovado") aprovadasPorMes[mes]++;
+                        if (estado === "rejeitado") rejeitadasPorMes[mes]++;
+                        if (estado === "resolvido") resolvidasPorMes[mes]++;
                     }
                 }
             });
@@ -178,12 +181,12 @@
             const custosPorMes = Array(12).fill(0);
 
             auditorias.forEach(a => {
-                if (a.data && a.custo) {
-                    const [ano, mes] = a.data.split("-");
-                    const idx = parseInt(mes, 10) - 1;
-                    if (idx >= 0 && idx < 12) {
+                const dataStr = a.dataHora || a.data;
+                if (dataStr && a.custo) {
+                    const mes = parseInt(dataStr.substr(5,2), 10) - 1;
+                    if (mes >= 0 && mes < 12) {
                         const custo = parseFloat(a.custo) || 0;
-                        custosPorMes[idx] += custo;
+                        custosPorMes[mes] += custo;
                     }
                 }
             });
@@ -231,7 +234,7 @@
                 options: {
                     responsive: true,
                     plugins: { legend: { display: true } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: { y: { beginAtZero: true, max: 10 } } 
                 }
             });
 
@@ -256,7 +259,7 @@
                         legend: { display: false }
                     },
                     scales: {
-                        y: { beginAtZero: true }
+                        y: { beginAtZero: true, max: 10} 
                     }
                 }
             });
@@ -264,7 +267,7 @@
             // Gráfico de Auditorias por Estado
             const auditorias = getAuditorias();
             const estados = ['Resolvido', 'Por Resolver', 'Em Resolução'];
-            const counts = estados.map(e => auditorias.filter(a => (a.estado || "").toLowerCase() === e.toLowerCase()).length);
+            const counts = estados.map(e => auditorias.filter(a => (a.estadoOcorrencia || "").toLowerCase() === e.toLowerCase()).length);
             const ctx2 = document.getElementById('graficoAuditorias').getContext('2d');
             new Chart(ctx2, {
                 type: 'doughnut',
@@ -296,7 +299,7 @@
                         <td class="px-4 py-2 text-center">${a.idAuditoria || a.id || ""}</td>
                         <td class="px-4 py-2 text-center">${a.localizacao || a.area || ""}</td>
                         <td class="px-4 py-2 text-center">
-                            <span class="status ${getStatusClass(a.estado)}">${a.estado || "N/A"}</span>
+                            <span class="status ${getStatusClass(a.estadoOcorrencia)}">${a.estadoOcorrencia || "N/A"}</span>
                         </td>
                         <td class="px-4 py-2 text-center">${a.dataHora || ""}</td>
                     </tr>
