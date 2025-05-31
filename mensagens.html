@@ -146,6 +146,7 @@
         }
 
         [...mensagens].reverse().forEach((msg, index) => {
+          if (!msg.nome && !msg.email && !msg.assunto && !msg.mensagem) return;
           const card = document.createElement('div');
           card.className = 'bg-white shadow-md rounded p-4';
 
