@@ -137,7 +137,7 @@
       function carregarMensagens() {
         const container = document.getElementById('mensagensContainer');
         container.innerHTML = "";
-        
+
         const mensagens = JSON.parse(localStorage.getItem('mensagens')) || [];
 
         if (mensagens.length === 0) {
@@ -145,7 +145,7 @@
           return;
         }
 
-        mensagens.reverse().forEach((msg, index) => {
+        [...mensagens].reverse().forEach((msg, index) => {
           const card = document.createElement('div');
           card.className = 'bg-white shadow-md rounded p-4';
 
